@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fake News Detection</title>
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --navy: #0f172a;
+            --text: #172033;
+            --muted: #64748b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+            background:
+                linear-gradient(
+                    180deg,
+                    #eef4ff 0%,
+                    #f8fafc 35%,
+                    #f4f7fb 100%
+                );
+            color: var(--text);
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            height: 72px;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: rgba(15, 23, 42, 0.97);
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.06);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+
+            padding: 10px 16px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            max-width: 980px;
+            margin: auto;
+            padding: 76px 20px 42px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            margin-bottom: 18px;
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 0.5px;
+
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size:
+                clamp(36px, 6vw, 62px);
+
+            line-height: 1.05;
+
+            letter-spacing: -2px;
+
+            color: var(--navy);
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 700px;
+
+            margin: 22px auto 0;
+
+            color: var(--muted);
+
+            font-size: 17px;
+
+            line-height: 1.8;
+        }
+
+        /* ================= MAIN CONTAINER ================= */
+
+        .container {
+            width: min(94%, 1060px);
+            margin: auto;
+        }
+
+        /* ================= INPUT CARD ================= */
+
+        .input-card {
+            background: var(--white);
+
+            border:
+                1px solid
+                rgba(226,232,240,0.9);
+
+            border-radius: 22px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 18px 50px
+                rgba(15, 23, 42, 0.08);
+
+            margin-bottom: 26px;
+        }
+
+        .section-top {
+            margin-bottom: 20px;
+        }
+
+        .section-top h2 {
+            margin: 0 0 8px;
+
+            font-size: 24px;
+
+            letter-spacing: -0.5px;
+        }
+
+        .section-top p {
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+        textarea {
+            width: 100%;
+
+            min-height: 250px;
+
+            resize: vertical;
+
+            padding: 18px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            border-radius: 14px;
+
+            background: #fbfdff;
+
+            color: var(--text);
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            outline: none;
+
+            transition: 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37,99,235,0.10);
+
+            background: white;
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            margin-top: 15px;
+        }
+
+        .input-hint {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .analyze-button {
+            border: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+
+            color: white;
+
+            padding: 13px 24px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 20px
+                rgba(37,99,235,0.20);
+
+            transition: 0.2s ease;
+        }
+
+        .analyze-button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 12px 24px
+                rgba(37,99,235,0.26);
+        }
+
+        /* ================= RESULTS ================= */
+
+        .result-card {
+            background: white;
+
+            border:
+                1px solid
+                rgba(226,232,240,0.9);
+
+            border-radius: 22px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 18px 50px
+                rgba(15,23,42,0.08);
+
+            margin-bottom: 26px;
+        }
+
+        .result-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .result-heading h2 {
+            margin: 0;
+
+            font-size: 24px;
+        }
+
+        .result-heading span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .prediction-panel {
+            padding: 30px;
+
+            text-align: center;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef4ff
+                );
+
+            border:
+                1px solid
+                #e2e8f0;
+        }
+
+        .prediction-label {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.2px;
+
+            font-weight: 700;
+        }
+
+        .prediction {
+            margin-top: 10px;
+
+            font-size:
+                clamp(36px, 5vw, 52px);
+
+            line-height: 1;
+
+            font-weight: 800;
+
+            letter-spacing: -1px;
+        }
+
+        .real {
+            color: var(--green);
+        }
+
+        .fake {
+            color: var(--red);
+        }
+
+        .result-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+
+            margin-top: 18px;
+        }
+
+        .result-item {
+            background: #f8fafc;
+
+            border:
+                1px solid
+                var(--border);
+
+            padding: 20px;
+
+            border-radius: 14px;
+        }
+
+        .result-item-label {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+
+            margin-bottom: 8px;
+        }
+
+        .result-item-value {
+            font-size: 23px;
+
+            font-weight: 800;
+        }
+
+        /* ================= PROBABILITY ================= */
+
+        .content-section {
+            margin-top: 28px;
+        }
+
+        .content-section h3 {
+            margin: 0 0 16px;
+
+            font-size: 17px;
+        }
+
+        .probability-row {
+            margin-bottom: 16px;
+        }
+
+        .probability-header {
+            display: flex;
+            justify-content: space-between;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+        .bar-background {
+            width: 100%;
+
+            height: 11px;
+
+            background: #e2e8f0;
+
+            border-radius: 99px;
+
+            overflow: hidden;
+        }
+
+        .probability-bar {
+            height: 100%;
+
+            width: 0;
+
+            border-radius: 99px;
+        }
+
+        .real-bar {
+            background: var(--green);
+        }
+
+        .fake-bar {
+            background: var(--red);
+        }
+
+        /* ================= CREDIBILITY ================= */
+
+        .credibility {
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        .credibility-value {
+            font-size: 36px;
+
+            font-weight: 800;
+
+            color: var(--primary);
+        }
+
+        .credibility-bar-wrapper {
+            flex: 1;
+
+            min-width: 200px;
+        }
+
+        .credibility-background {
+            width: 100%;
+
+            height: 11px;
+
+            background: #e2e8f0;
+
+            border-radius: 99px;
+
+            overflow: hidden;
+        }
+
+        .credibility-fill {
+            width: 0;
+
+            height: 100%;
+
+            background: var(--primary);
+
+            border-radius: 99px;
+        }
+
+        .note {
+            margin-top: 12px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 16px;
+        }
+
+        .feature-box {
+            padding: 20px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+
+            background: #fbfdff;
+        }
+
+        .feature-title {
+            margin-bottom: 14px;
+
+            font-size: 14px;
+
+            font-weight: 800;
+        }
+
+        .feature-title.fake-title {
+            color: var(--red);
+        }
+
+        .feature-title.real-title {
+            color: var(--green);
+        }
+
+        .feature-list {
+            list-style: none;
+
+            padding: 0;
+
+            margin: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid
+                #eef2f7;
+
+            font-size: 13px;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: 0;
+        }
+
+        .feature-score {
+            color: var(--muted);
+
+            font-weight: 700;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .stat {
+            padding: 20px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+        }
+
+        .stat-value {
+            color: var(--primary);
+
+            font-size: 27px;
+
+            font-weight: 800;
+        }
+
+        .stat-label {
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        /* ================= NEWS ================= */
+
+        .news-content {
+            padding: 18px;
+
+            border:
+                1px solid
+                var(--border);
+
+            background: #f8fafc;
+
+            border-radius: 14px;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            white-space: pre-wrap;
+
+            word-break: break-word;
+        }
+
+        /* ================= PIPELINE ================= */
+
+        .pipeline {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .pipeline-step {
+            padding: 10px 13px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            color: #1d4ed8;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .pipeline-arrow {
+            color: #94a3b8;
+
+            font-weight: 700;
+        }
+
+        /* ================= ABOUT ================= */
+
+        .about-card {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+
+            color: white;
+
+            border-radius: 22px;
+
+            padding: 30px;
+
+            margin-bottom: 35px;
+        }
+
+        .about-card h2 {
+            margin-top: 0;
+
+            font-size: 22px;
+        }
+
+        .about-card p {
+            color: #cbd5e1;
+
+            line-height: 1.8;
+
+            font-size: 14px;
+        }
+
+        .dashboard-button {
+            display: inline-block;
+
+            margin-top: 8px;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #0f172a;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .dashboard-button:hover {
+            background: #e2e8f0;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 30px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 850px) {
+
+            .result-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .nav-link {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding-top: 55px;
+            }
+
+            .input-card,
+            .result-card,
+            .about-card {
+                padding: 22px;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .input-hint {
+                text-align: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 450px) {
+
+            .result-grid,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <a href="/" class="brand">
+        Fake News Detection
+    </a>
+
+    <div class="nav-links">
+
+        <a href="/" class="nav-link active">
+            Detection
+        </a>
+
+        <a href="/dashboard" class="nav-link">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="hero">
+
+    <div class="hero-badge">
+        NLP-Based Classification System
+    </div>
+
+    <h1>
+        Advanced <span>Fake News</span> Detection
+    </h1>
+
+    <p>
+        Analyze news content using Natural Language Processing,
+        TF-IDF feature extraction and a calibrated machine-learning
+        classification model.
+    </p>
+
+</section>
+
+
+<div class="container">
+
+
+<!-- ================= INPUT ================= -->
+
+<div class="input-card">
+
+    <div class="section-top">
+
+        <h2>
+            Analyze News Article
+        </h2>
+
+        <p>
+            Enter the title or complete text of a news article.
+            The trained model will classify the input as REAL or FAKE.
+        </p>
+
+    </div>
+
+
+    <form method="POST">
+
+        <textarea
+            name="news"
+            placeholder="Paste or type your news article here..."
+            required
+        >{{ news_text or "" }}</textarea>
+
+
+        <div class="form-footer">
+
+            <div class="input-hint">
+                For best results, provide the complete article text.
+            </div>
+
+
+            <button
+                type="submit"
+                class="analyze-button"
+            >
+                Analyze News
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% if prediction %}
+
+
+<!-- ================= RESULT ================= -->
+
+<div class="result-card">
+
+    <div class="result-heading">
+
+        <h2>
+            Analysis Result
+        </h2>
+
+        <span>
+            Machine-learning prediction
+        </span>
+
+    </div>
+
+
+    <div class="prediction-panel">
+
+        <div class="prediction-label">
+            Model Prediction
+        </div>
+
+
+        {% if prediction == "REAL" %}
+
+        <div class="prediction real">
+            REAL
+        </div>
+
+        {% else %}
+
+        <div class="prediction fake">
+            FAKE
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <div class="result-grid">
+
+
+        <div class="result-item">
+
+            <div class="result-item-label">
+                Confidence
+            </div>
+
+            <div class="result-item-value">
+                {{ confidence }}%
+            </div>
+
+        </div>
+
+
+        <div class="result-item">
+
+            <div class="result-item-label">
+                Risk Level
+            </div>
+
+            <div class="result-item-value">
+                {{ risk_level }}
+            </div>
+
+        </div>
+
+
+        <div class="result-item">
+
+            <div class="result-item-label">
+                Credibility
+            </div>
+
+            <div class="result-item-value">
+                {{ credibility_score }}
+            </div>
+
+        </div>
+
+
+        <div class="result-item">
+
+            <div class="result-item-label">
+                Words
+            </div>
+
+            <div class="result-item-value">
+                {{ word_count }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= PROBABILITIES ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            Classification Probability
+        </h3>
+
+
+        <div class="probability-row">
+
+            <div class="probability-header">
+
+                <span>
+                    REAL
+                </span>
+
+                <span>
+                    {{ real_probability }}%
+                </span>
+
+            </div>
+
+
+            <div class="bar-background">
+
+                <div
+                    class="probability-bar real-bar"
+                    id="real-bar"
+                    data-width="{{ real_probability }}"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="probability-row">
+
+            <div class="probability-header">
+
+                <span>
+                    FAKE
+                </span>
+
+                <span>
+                    {{ fake_probability }}%
+                </span>
+
+            </div>
+
+
+            <div class="bar-background">
+
+                <div
+                    class="probability-bar fake-bar"
+                    id="fake-bar"
+                    data-width="{{ fake_probability }}"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CREDIBILITY ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            Estimated Credibility
+        </h3>
+
+
+        <div class="credibility">
+
+            <div class="credibility-value">
+                {{ credibility_score }} / 100
+            </div>
+
+
+            <div class="credibility-bar-wrapper">
+
+                <div class="credibility-background">
+
+                    <div
+                        class="credibility-fill"
+                        id="credibility-fill"
+                        data-score="{{ credibility_score }}"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="note">
+
+            This is a model-based estimate derived from the
+            prediction confidence. It is not independent factual
+            verification.
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            Model Explanation
+        </h3>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-box">
+
+                <div class="feature-title fake-title">
+                    FAKE-related Features
+                </div>
+
+
+                <ul class="feature-list">
+
+                    {% for feature in fake_features %}
+
+                    <li>
+
+                        <span>
+                            {{ feature[0] }}
+                        </span>
+
+                        <span class="feature-score">
+                            {{ feature[1] }}
+                        </span>
+
+                    </li>
+
+                    {% else %}
+
+                    <li>
+                        No significant features found.
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <div class="feature-title real-title">
+                    REAL-related Features
+                </div>
+
+
+                <ul class="feature-list">
+
+                    {% for feature in real_features %}
+
+                    <li>
+
+                        <span>
+                            {{ feature[0] }}
+                        </span>
+
+                        <span class="feature-score">
+                            {{ feature[1] }}
+                        </span>
+
+                    </li>
+
+                    {% else %}
+
+                    <li>
+                        No significant features found.
+                    </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            Text Statistics
+        </h3>
+
+
+        <div class="stats">
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ word_count }}
+                </div>
+
+                <div class="stat-label">
+                    Words
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ character_count }}
+                </div>
+
+                <div class="stat-label">
+                    Characters
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ unique_word_count }}
+                </div>
+
+                <div class="stat-label">
+                    Unique Words
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-value">
+                    {{ tfidf_feature_count }}
+                </div>
+
+                <div class="stat-label">
+                    TF-IDF Features
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= NEWS ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            News Analyzed
+        </h3>
+
+
+        <div class="news-content">
+            {{ news_text }}
+        </div>
+
+    </div>
+
+
+    <!-- ================= PIPELINE ================= -->
+
+    <div class="content-section">
+
+        <h3>
+            Detection Pipeline
+        </h3>
+
+
+        <div class="pipeline">
+
+            <div class="pipeline-step">
+                News Input
+            </div>
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+            <div class="pipeline-step">
+                NLP
+            </div>
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+            <div class="pipeline-step">
+                TF-IDF
+            </div>
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+            <div class="pipeline-step">
+                Calibrated Linear SVM
+            </div>
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+            <div class="pipeline-step">
+                Prediction
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+
+<!-- ================= ABOUT ================= -->
+
+<div class="about-card">
+
+    <h2>
+        About the Detection System
+    </h2>
+
+
+    <p>
+
+        This project applies Natural Language Processing and
+        machine learning to classify news articles into REAL
+        and FAKE categories. The text is transformed into
+        TF-IDF features, which are processed by a calibrated
+        Linear SVM classifier.
+
+    </p>
+
+
+    <p>
+
+        The system provides the predicted class, confidence,
+        class probabilities, estimated credibility, text
+        statistics and model-related feature information.
+
+    </p>
+
+
+    <a
+        href="/dashboard"
+        class="dashboard-button"
+    >
+        Open Model Dashboard
+    </a>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+    Fake News Detection System
+    <br>
+    NLP | TF-IDF | Calibrated Linear SVM
+
+</footer>
+
+
+<script>
+
+    const realBar =
+        document.getElementById("real-bar");
+
+    if (realBar) {
+
+        const width =
+            parseFloat(
+                realBar.getAttribute("data-width")
+            ) || 0;
+
+        realBar.style.width =
+            width + "%";
+
+    }
+
+
+    const fakeBar =
+        document.getElementById("fake-bar");
+
+    if (fakeBar) {
+
+        const width =
+            parseFloat(
+                fakeBar.getAttribute("data-width")
+            ) || 0;
+
+        fakeBar.style.width =
+            width + "%";
+
+    }
+
+
+    const credibilityFill =
+        document.getElementById(
+            "credibility-fill"
+        );
+
+    if (credibilityFill) {
+
+        const score =
+            parseFloat(
+                credibilityFill.getAttribute(
+                    "data-score"
+                )
+            ) || 0;
+
+        credibilityFill.style.width =
+            score + "%";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Model Dashboard</title>
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --navy: #0f172a;
+            --text: #172033;
+            --muted: #64748b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --green: #16a34a;
+            --red: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #eef4ff 0%,
+                    #f8fafc 40%,
+                    #f4f7fb 100%
+                );
+
+            color: var(--text);
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+
+            min-height: 72px;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background:
+                rgba(15,23,42,0.97);
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.06);
+        }
+
+        .brand {
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            font-weight: 800;
+        }
+
+        .nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .nav a {
+            color: #cbd5e1;
+
+            text-decoration: none;
+
+            padding: 10px 16px;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            background: #1e293b;
+
+            color: white;
+        }
+
+        .nav .active {
+            background: var(--primary);
+
+            color: white;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            text-align: center;
+
+            max-width: 950px;
+
+            margin: auto;
+
+            padding: 70px 20px 42px;
+        }
+
+        .badge {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            border-radius: 999px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            color: #1d4ed8;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.7px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size:
+                clamp(34px, 5vw, 54px);
+
+            letter-spacing: -1.8px;
+
+            color: var(--navy);
+        }
+
+        .hero p {
+            color: var(--muted);
+
+            max-width: 680px;
+
+            margin: 17px auto 0;
+
+            line-height: 1.8;
+
+            font-size: 16px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: min(94%, 1150px);
+
+            margin: auto;
+        }
+
+        /* ================= METRICS ================= */
+
+        .metrics {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 14px;
+
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: white;
+
+            padding: 23px 15px;
+
+            text-align: center;
+
+            border-radius: 17px;
+
+            border:
+                1px solid
+                rgba(226,232,240,0.9);
+
+            box-shadow:
+                0 12px 35px
+                rgba(15,23,42,0.07);
+        }
+
+        .metric-label {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            letter-spacing: 0.7px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            color: var(--primary);
+
+            font-size: 28px;
+
+            font-weight: 800;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            background: white;
+
+            margin-top: 20px;
+
+            padding: 28px;
+
+            border-radius: 20px;
+
+            border:
+                1px solid
+                rgba(226,232,240,0.9);
+
+            box-shadow:
+                0 12px 35px
+                rgba(15,23,42,0.06);
+        }
+
+        .section-header {
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            margin: 0 0 8px;
+
+            font-size: 22px;
+        }
+
+        .section-header p {
+            margin: 0;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+
+            min-width: 700px;
+
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: var(--navy);
+
+            color: white;
+
+            padding: 14px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+        .comparison-table td {
+            padding: 14px;
+
+            border:
+                1px solid
+                var(--border);
+
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 13px;
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #eff6ff;
+        }
+
+        .best-row {
+            background: #eff6ff !important;
+
+            font-weight: 800;
+        }
+
+        .best-row td {
+            color: #1d4ed8;
+        }
+
+        /* ================= GRAPHS ================= */
+
+        .graph-wrapper {
+            width: 100%;
+
+            padding: 10px;
+
+            overflow-x: auto;
+
+            text-align: center;
+        }
+
+        .graph-wrapper img {
+            display: block;
+
+            max-width: 100%;
+
+            height: auto;
+
+            margin: auto;
+
+            border-radius: 14px;
+        }
+
+        /* ================= DATASET ================= */
+
+        .dataset-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 16px;
+        }
+
+        .dataset-card {
+            padding: 25px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 15px;
+
+            text-align: center;
+        }
+
+        .dataset-number {
+            font-size: 35px;
+
+            font-weight: 800;
+
+            color: var(--primary);
+        }
+
+        .dataset-label {
+            margin-top: 7px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+        /* ================= PROGRESS ================= */
+
+        .progress-block {
+            margin-top: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            width: 100%;
+
+            height: 11px;
+
+            background: #e2e8f0;
+
+            border-radius: 999px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0;
+
+            height: 100%;
+
+            background: var(--primary);
+
+            border-radius: 999px;
+        }
+
+        /* ================= INFO ================= */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .info-card {
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+        }
+
+        .info-card strong {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+        }
+
+        .info-card span {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= MATRIX ================= */
+
+        .matrix-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        .matrix {
+            width: 100%;
+
+            max-width: 700px;
+
+            margin: 20px auto;
+
+            border-collapse: collapse;
+
+            text-align: center;
+        }
+
+        .matrix th {
+            padding: 15px;
+
+            background: var(--navy);
+
+            color: white;
+
+            font-size: 13px;
+        }
+
+        .matrix td {
+            padding: 22px;
+
+            border:
+                1px solid
+                var(--border);
+
+            font-size: 21px;
+
+            font-weight: 800;
+        }
+
+        .matrix-label {
+            color: var(--muted);
+
+            font-size: 12px !important;
+
+            font-weight: 700 !important;
+        }
+
+        /* ================= PIPELINE ================= */
+
+        .pipeline {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .pipeline-step {
+            padding: 10px 13px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            color: #1d4ed8;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .pipeline-arrow {
+            color: #94a3b8;
+
+            font-weight: 700;
+        }
+
+        /* ================= BEST MODEL ================= */
+
+        .best-model {
+            margin-top: 20px;
+
+            padding: 18px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #f8fafc
+                );
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 14px;
+        }
+
+        .best-model strong {
+            color: var(--primary);
+        }
+
+        /* ================= ABOUT ================= */
+
+        .about {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+
+            color: white;
+
+            padding: 30px;
+
+            margin-top: 20px;
+
+            border-radius: 20px;
+        }
+
+        .about h2 {
+            margin-top: 0;
+
+            font-size: 22px;
+        }
+
+        .about p {
+            color: #cbd5e1;
+
+            line-height: 1.8;
+
+            font-size: 14px;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .button-area {
+            text-align: center;
+
+            margin: 30px 0 48px;
+        }
+
+        .button {
+            display: inline-block;
+
+            padding: 13px 24px;
+
+            background: var(--primary);
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            transition: 0.2s ease;
+        }
+
+        .button:hover {
+            background: var(--primary-dark);
+
+            transform: translateY(-1px);
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 30px;
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1050px) {
+
+            .metrics {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 750px) {
+
+            .metrics {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .dataset-grid,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 55px;
+            }
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .nav a {
+                padding: 8px 9px;
+                font-size: 12px;
+            }
+
+            .section {
+                padding: 21px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav class="navbar">
+
+    <a href="/" class="brand">
+        Fake News Detection
+    </a>
+
+
+    <div class="nav">
+
+        <a href="/">
+            Detection
+        </a>
+
+        <a href="/dashboard" class="active">
+            Dashboard
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="badge">
+        Model Evaluation Dashboard
+    </div>
+
+    <h1>
+        Performance & Analysis
+    </h1>
+
+    <p>
+        Evaluation of the NLP-based fake news detection system,
+        including model metrics, algorithm comparison,
+        dataset distribution and classification results.
+    </p>
+
+</section>
+
+
+<div class="container">
+
+
+<!-- ================= PERFORMANCE ================= -->
+
+<div class="metrics">
+
+
+    <div class="metric-card">
+
+        <div class="metric-label">
+            Accuracy
+        </div>
+
+        <div class="metric-value">
+            {{ accuracy }}%
+        </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+        <div class="metric-label">
+            Precision
+        </div>
+
+        <div class="metric-value">
+            {{ precision }}%
+        </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+        <div class="metric-label">
+            Recall
+        </div>
+
+        <div class="metric-value">
+            {{ recall }}%
+        </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+        <div class="metric-label">
+            F1 Score
+        </div>
+
+        <div class="metric-value">
+            {{ f1_score }}%
+        </div>
+
+    </div>
+
+
+    <div class="metric-card">
+
+        <div class="metric-label">
+            ROC-AUC
+        </div>
+
+        <div class="metric-value">
+            {{ roc_auc }}
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= MODEL COMPARISON ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Model Comparison
+        </h2>
+
+        <p>
+            Comparison of Logistic Regression, Naive Bayes
+            and Linear SVM based on the test dataset.
+        </p>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+        <table class="comparison-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Model
+                    </th>
+
+                    <th>
+                        Accuracy
+                    </th>
+
+                    <th>
+                        Precision
+                    </th>
+
+                    <th>
+                        Recall
+                    </th>
+
+                    <th>
+                        F1 Score
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="comparison-body">
+
+                <tr>
+
+                    <td colspan="5">
+                        Loading comparison results...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MODEL COMPARISON GRAPH ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Algorithm Comparison
+        </h2>
+
+        <p>
+            Visual comparison of the evaluated machine-learning
+            models across the main performance metrics.
+        </p>
+
+    </div>
+
+
+    <div class="graph-wrapper">
+
+        <img
+            src="{{ url_for('static', filename='model_comparison.png') }}"
+            alt="Model Comparison Graph"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- ================= MODEL PERFORMANCE ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Model Performance
+        </h2>
+
+        <p>
+            Performance of the selected Calibrated Linear SVM
+            on the held-out test dataset.
+        </p>
+
+    </div>
+
+
+    <div class="graph-wrapper">
+
+        <img
+            src="{{ url_for('static', filename='model_performance.png') }}"
+            alt="Model Performance Graph"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- ================= CONFUSION MATRIX ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Confusion Matrix
+        </h2>
+
+        <p>
+            Visualization of correct and incorrect predictions
+            for the REAL and FAKE classes.
+        </p>
+
+    </div>
+
+
+    <div class="graph-wrapper">
+
+        <img
+            src="{{ url_for('static', filename='confusion_matrix.png') }}"
+            alt="Confusion Matrix"
+        >
+
+    </div>
+
+
+    <div class="matrix-wrapper">
+
+        <table class="matrix">
+
+            <tr>
+
+                <th>
+                    Actual / Predicted
+                </th>
+
+                <th>
+                    FAKE
+                </th>
+
+                <th>
+                    REAL
+                </th>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="matrix-label">
+                    FAKE
+                </td>
+
+                <td>
+                    {{ cm_fake_fake }}
+                </td>
+
+                <td>
+                    {{ cm_fake_real }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="matrix-label">
+                    REAL
+                </td>
+
+                <td>
+                    {{ cm_real_fake }}
+                </td>
+
+                <td>
+                    {{ cm_real_real }}
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ================= DATASET ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Dataset Distribution
+        </h2>
+
+        <p>
+            Distribution of labelled REAL and FAKE news articles
+            used by the training pipeline.
+        </p>
+
+    </div>
+
+
+    <div class="dataset-grid">
+
+
+        <div class="dataset-card">
+
+            <div class="dataset-number">
+                {{ real_count }}
+            </div>
+
+            <div class="dataset-label">
+                REAL Articles
+            </div>
+
+        </div>
+
+
+        <div class="dataset-card">
+
+            <div class="dataset-number">
+                {{ fake_count }}
+            </div>
+
+            <div class="dataset-label">
+                FAKE Articles
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="progress-block">
+
+        <div class="progress-header">
+
+            <span>
+                REAL
+            </span>
+
+            <span>
+                {{ real_percentage }}%
+            </span>
+
+        </div>
+
+
+        <div class="progress-bg">
+
+            <div
+                class="progress-fill"
+                id="real-progress"
+                data-width="{{ real_percentage }}"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <div class="progress-block">
+
+        <div class="progress-header">
+
+            <span>
+                FAKE
+            </span>
+
+            <span>
+                {{ fake_percentage }}%
+            </span>
+
+        </div>
+
+
+        <div class="progress-bg">
+
+            <div
+                class="progress-fill"
+                id="fake-progress"
+                data-width="{{ fake_percentage }}"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= MODEL INFORMATION ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Model Information
+        </h2>
+
+        <p>
+            Main technologies and methods used in the project.
+        </p>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-card">
+
+            <strong>
+                Machine Learning Algorithm
+            </strong>
+
+            <span>
+                {{ model_name }}
+            </span>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <strong>
+                Feature Extraction
+            </strong>
+
+            <span>
+                {{ feature_method }}
+            </span>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <strong>
+                NLP Method
+            </strong>
+
+            <span>
+                {{ preprocessing }}
+            </span>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <strong>
+                Classification
+            </strong>
+
+            <span>
+                {{ classification }}
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================= PIPELINE ================= -->
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>
+            Detection Pipeline
+        </h2>
+
+        <p>
+            Processing sequence used to classify a news article.
+        </p>
+
+    </div>
+
+
+    <div class="pipeline">
+
+
+        <div class="pipeline-step">
+            News Input
+        </div>
+
+
+        <div class="pipeline-arrow">
+            →
+        </div>
+
+
+        <div class="pipeline-step">
+            NLP Preprocessing
+        </div>
+
+
+        <div class="pipeline-arrow">
+            →
+        </div>
+
+
+        <div class="pipeline-step">
+            TF-IDF
+        </div>
+
+
+        <div class="pipeline-arrow">
+            →
+        </div>
+
+
+        <div class="pipeline-step">
+            Calibrated Linear SVM
+        </div>
+
+
+        <div class="pipeline-arrow">
+            →
+        </div>
+
+
+        <div class="pipeline-step">
+            Probability
+        </div>
+
+
+        <div class="pipeline-arrow">
+            →
+        </div>
+
+
+        <div class="pipeline-step">
+            REAL / FAKE
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================= BEST MODEL ================= -->
+
+<div class="best-model">
+
+    Best performing model:
+
+    <strong id="best-model">
+        Calibrated Linear SVM
+    </strong>
+
+</div>
+
+
+<!-- ================= ABOUT ================= -->
+
+<div class="about">
+
+    <h2>
+        About the Project
+    </h2>
+
+
+    <p>
+
+        This system uses Natural Language Processing,
+        TF-IDF feature extraction and machine learning
+        to classify news articles into REAL and FAKE
+        categories.
+
+    </p>
+
+
+    <p>
+
+        The dashboard provides model evaluation metrics,
+        algorithm comparison, confusion matrix analysis,
+        dataset distribution and the complete processing
+        pipeline.
+
+    </p>
+
+</div>
+
+
+<!-- ================= BUTTON ================= -->
+
+<div class="button-area">
+
+    <a
+        href="/"
+        class="button"
+    >
+        Back to News Detection
+    </a>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+    Fake News Detection System
+    <br>
+    NLP | TF-IDF | Calibrated Linear SVM
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    /* ==================================================
+       DATASET PROGRESS
+    ================================================== */
+
+    const realProgress =
+        document.getElementById(
+            "real-progress"
+        );
+
+    if (realProgress) {
+
+        const width =
+            parseFloat(
+                realProgress.getAttribute(
+                    "data-width"
+                )
+            ) || 0;
+
+        realProgress.style.width =
+            width + "%";
+    }
+
+
+    const fakeProgress =
+        document.getElementById(
+            "fake-progress"
+        );
+
+    if (fakeProgress) {
+
+        const width =
+            parseFloat(
+                fakeProgress.getAttribute(
+                    "data-width"
+                )
+            ) || 0;
+
+        fakeProgress.style.width =
+            width + "%";
+    }
+
+
+    /* ==================================================
+       MODEL COMPARISON
+    ================================================== */
+
+    fetch("/model-comparison-data")
+
+        .then(function(response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Could not load model comparison"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(function(data) {
+
+            const tbody =
+                document.getElementById(
+                    "comparison-body"
+                );
+
+
+            if (!Array.isArray(data)) {
+
+                tbody.innerHTML =
+                    "<tr><td colspan='5'>No comparison data available.</td></tr>";
+
+                return;
+
+            }
+
+
+            tbody.innerHTML = "";
+
+
+            let bestIndex = 0;
+
+
+            for (
+                let i = 1;
+                i < data.length;
+                i++
+            ) {
+
+                if (
+                    Number(data[i].F1_Score)
+                    >
+                    Number(data[bestIndex].F1_Score)
+                ) {
+
+                    bestIndex = i;
+
+                }
+
+            }
+
+
+            data.forEach(
+                function(model, index) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    if (
+                        index === bestIndex
+                    ) {
+
+                        row.className =
+                            "best-row";
+
+                    }
+
+
+                    const modelCell =
+                        document.createElement(
+                            "td"
+                        );
+
+                    modelCell.textContent =
+                        model.Model;
+
+
+                    const accuracyCell =
+                        document.createElement(
+                            "td"
+                        );
+
+                    accuracyCell.textContent =
+                        model.Accuracy + "%";
+
+
+                    const precisionCell =
+                        document.createElement(
+                            "td"
+                        );
+
+                    precisionCell.textContent =
+                        model.Precision + "%";
+
+
+                    const recallCell =
+                        document.createElement(
+                            "td"
+                        );
+
+                    recallCell.textContent =
+                        model.Recall + "%";
+
+
+                    const f1Cell =
+                        document.createElement(
+                            "td"
+                        );
+
+                    f1Cell.textContent =
+                        model.F1_Score + "%";
+
+
+                    row.appendChild(
+                        modelCell
+                    );
+
+                    row.appendChild(
+                        accuracyCell
+                    );
+
+                    row.appendChild(
+                        precisionCell
+                    );
+
+                    row.appendChild(
+                        recallCell
+                    );
+
+                    row.appendChild(
+                        f1Cell
+                    );
+
+
+                    tbody.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+
+            const bestModel =
+                document.getElementById(
+                    "best-model"
+                );
+
+
+            if (bestModel) {
+
+                bestModel.textContent =
+                    data[bestIndex].Model;
+
+            }
+
+        })
+
+
+        .catch(function(error) {
+
+            console.error(
+                "Model comparison error:",
+                error
+            );
+
+
+            document.getElementById(
+                "comparison-body"
+            ).innerHTML =
+                "<tr><td colspan='5'>Unable to load model comparison.</td></tr>";
+
+        });
+
+</script>
+
+
+</body>
+
+</html>
